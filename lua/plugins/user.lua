@@ -1,6 +1,6 @@
 -- since this is just an example spec, don't actually load anything here and return an empty spec
 -- stylua: ignore
-if true then return {} end
+-- if true then return {} end
 
 -- every spec file under the "plugins" directory will be loaded automatically by lazy.nvim
 --
@@ -9,16 +9,31 @@ if true then return {} end
 -- * disable/enabled LazyVim plugins
 -- * override the configuration of LazyVim plugins
 return {
-  -- add gruvbox
-  { "ellisonleao/gruvbox.nvim" },
-
-  -- Configure LazyVim to load gruvbox
-  {
-    "LazyVim/LazyVim",
-    opts = {
-      colorscheme = "gruvbox",
+  -- add tokynight
+    {
+      "folke/tokyonight.nvim",
+      opts = {
+        transparent = true,
+        styles = {
+          sidebars = "transparent",
+          floats = "transparent",
+        },
+      },
     },
-  },
+  -- add gruvbox
+    {
+        "ellisonleao/gruvbox.nvim",
+          opts = {
+            transparent_mode = true,
+        },
+    },
+  -- Configure LazyVim to load gruvbox
+    {
+        "LazyVim/LazyVim",
+        opts = {
+            colorscheme = "gruvbox",
+        },
+    },
 
   -- change trouble config
   {
@@ -151,27 +166,6 @@ return {
       })
     end,
   },
-
-  -- the opts function can also be used to change the default opts:
-  {
-    "nvim-lualine/lualine.nvim",
-    event = "VeryLazy",
-    opts = function(_, opts)
-      table.insert(opts.sections.lualine_x, "😄")
-    end,
-  },
-
-  -- or you can return new options to override all the defaults
-  {
-    "nvim-lualine/lualine.nvim",
-    event = "VeryLazy",
-    opts = function()
-      return {
-        --[[add your custom lualine config here]]
-      }
-    end,
-  },
-
   -- use mini.starter instead of alpha
   { import = "lazyvim.plugins.extras.ui.mini-starter" },
 
@@ -185,6 +179,7 @@ return {
     "neovim/nvim-lspconfig",
     opts = {
       ensure_installed = {
+        "clangd",
         "stylua",
         "shellcheck",
         "shfmt",
@@ -192,17 +187,7 @@ return {
       },
     },
   },
-
   -- USER CHANGE
-  -- add clipboard plugin
-  {
-    "rodjek/vim-clipscope",
-    event = "BufReadPost",
-    config = function()
-      vim.g.clipscope_keep_selection = 1
-      vim.g.clipscope_vertical_split = 1
-    end,
-  },
   {
     "L3MON4D3/LuaSnip",
     version = "v2.*",
@@ -228,70 +213,47 @@ return {
     "BurntSushi/ripgrep",
   },
     {
-        "nvimedev/dashboard-nvim",
-        event = "VimEnter",
-        lazy = false,
-        opts = function ()
-            local logo = [[
+        "dhananjaylatkar/cscope_maps.nvim",
+        -- dependencies = {
+        --     "nvim-telescope/telescope.nvim", -- optional [for picker="telescope"]
+        -- },
+        config = function()
+            require("cscope_maps").setup({
+                -- maps related defaults
+                disable_maps = false, -- "true" disables default keymaps
+                skip_input_prompt = false, -- "true" doesn't ask for input
+                prefix = "C-c", -- prefix to trigger maps
 
-███████╗ █████╗ ███╗   ██╗███████╗
-╚══███╔╝██╔══██╗████╗  ██║██╔════╝
-  ███╔╝ ███████║██╔██╗ ██║█████╗  
- ███╔╝  ██╔══██║██║╚██╗██║██╔══╝  
-███████╗██║  ██║██║ ╚████║███████╗
-╚══════╝╚═╝  ╚═╝╚═╝  ╚═══╝╚══════╝
-            ]]
-            logo = string.rep("\n", 8) .. logo .. "\n\n"
-
-        local opts = {
-            theme = "doom",
-            hide = {
-            -- this is taken care of by lualine
-            -- enabling this messes up the actual laststatus setting after loading a file
-            statusline = false,
-            },
-            config = {
-            header = vim.split(logo, "\n"),
-            -- stylua: ignore
-            center = {
-                { action = 'lua LazyVim.pick()()',                           desc = " Find File",       icon = " ", key = "f" },
-                { action = "ene | startinsert",                              desc = " New File",        icon = " ", key = "n" },
-                { action = 'lua LazyVim.pick("oldfiles")()',                 desc = " Recent Files",    icon = " ", key = "r" },
-                { action = 'lua LazyVim.pick("live_grep")()',                desc = " Find Text",       icon = " ", key = "g" },
-                { action = 'lua LazyVim.pick.config_files()()',              desc = " Config",          icon = " ", key = "c" },
-                { action = 'lua require("persistence").load()',              desc = " Restore Session", icon = " ", key = "s" },
-                { action = "LazyExtras",                                     desc = " Lazy Extras",     icon = " ", key = "x" },
-                { action = "Lazy",                                           desc = " Lazy",            icon = "󰒲 ", key = "l" },
-                { action = function() vim.api.nvim_input("<cmd>qa<cr>") end, desc = " Quit",            icon = " ", key = "q" },
-            },
-            footer = function()
-                local stats = require("lazy").stats()
-                local ms = (math.floor(stats.startuptime * 100 + 0.5) / 100)
-                return { "⚡ Neovim loaded " .. stats.loaded .. "/" .. stats.count .. " plugins in " .. ms .. "ms" }
-            end,
-            },
-        }
-
-        for _, button in ipairs(opts.config.center) do
-            button.desc = button.desc .. string.rep(" ", 43 - #button.desc)
-            button.key_format = "  %s"
-        end
-
-        -- open dashboard after closing lazy
-        if vim.o.filetype == "lazy" then
-            vim.api.nvim_create_autocmd("WinClosed", {
-            pattern = tostring(vim.api.nvim_get_current_win()),
-            once = true,
-            callback = function()
-                vim.schedule(function()
-                vim.api.nvim_exec_autocmds("UIEnter", { group = "dashboard" })
-                end)
-            end,
+                -- cscope related defaults
+                cscope = {
+                    -- location of cscope db file
+                    db_file = "./cscope.out", -- DB or table of DBs
+                                            -- NOTE:
+                                            --   when table of DBs is provided 
+                                            --   first DB is "primary" and others are "secondary"
+                                            --   primary DB is used for build and project_rooter
+                    -- cscope executable
+                    exec = "cscope", -- "cscope" or "gtags-cscope"
+                    -- choose your fav picker
+                    picker = "telescope", -- "quickfix", "telescope", "fzf-lua" or "mini-pick"
+                    -- size of quickfix window
+                    qf_window_size = 5, -- any positive integer
+                    -- position of quickfix window
+                    qf_window_pos = "bottom", -- "bottom", "right", "left" or "top"
+                    -- "true" does not open picker for single result, just JUMP
+                    skip_picker_for_single_result = false, -- "false" or "true"
+                    -- these args are directly passed to "cscope -f <db_file> <args>"
+                    db_build_cmd_args = { "-bqkv" },
+                    -- statusline indicator, default is cscope executable
+                    statusline_indicator = nil,
+                    -- try to locate db_file in parent dir(s)
+                    project_rooter = {
+                        enable = false, -- "true" or "false"
+                        -- change cwd to where db_file is located
+                        change_cwd = false, -- "true" or "false"
+                    },
+                }
             })
-        end
-
-        return opts
-                end,
-        dependencies = {{'nvim-tree/nvim-web-devicons'}}
-        },
+        end,
+    },
 }
