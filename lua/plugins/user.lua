@@ -13,7 +13,7 @@ return {
     {
       "folke/tokyonight.nvim",
       opts = {
-        transparent = true,
+        transparent = false,
         styles = {
           sidebars = "transparent",
           floats = "transparent",
@@ -24,14 +24,14 @@ return {
     {
         "ellisonleao/gruvbox.nvim",
           opts = {
-            transparent_mode = true,
+            transparent_mode = false,
         },
     },
   -- Configure LazyVim to load gruvbox
     {
         "LazyVim/LazyVim",
         opts = {
-            colorscheme = "gruvbox",
+            colorscheme = "tokyonight",
         },
     },
 

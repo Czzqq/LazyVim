@@ -8,3 +8,8 @@ vim.opt.expandtab = true
 vim.g.autoformat = false
 
 vim.opt.clipboard = "unnamedplus"
+
+vim.g.snacks_animate = false
+
+-- Enable true color support
+-- vim.opt.termguicolors = true
