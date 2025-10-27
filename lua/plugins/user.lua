@@ -256,4 +256,60 @@ return {
             })
         end,
     },
+      {
+    "stevearc/aerial.nvim",
+    event = "LazyFile",
+    dependencies = {
+      "nvim-treesitter/nvim-treesitter",
+      "nvim-tree/nvim-web-devicons",
+    },
+    opts = {
+      backends = { "lsp", "treesitter", "markdown", "man" },
+
+      layout = {
+        max_width = { 40, 0.2 },
+        width = 30,
+        min_width = 20,
+        default_direction = "right",
+        placement = "edge",
+      },
+
+      -- 显示设置
+      show_guides = true,
+      guides = {
+        mid_item = "├─",
+        last_item = "└─",
+        nested_top = "│ ",
+        whitespace = "  ",
+      },
+
+      -- 高亮当前符号
+      highlight_on_hover = true,
+      highlight_on_jump = 300,
+
+      -- 自动更新
+      update_events = "TextChanged,InsertLeave",
+
+      -- 图标
+      icons = {},
+
+      -- 过滤（显示哪些符号类型）
+      filter_kind = {
+        "Class",
+        "Constructor",
+        "Enum",
+        "Function",
+        "Interface",
+        "Module",
+        "Method",
+        "Struct",
+      },
+    },
+    keys = {
+      { "<leader>a", "<cmd>AerialToggle<cr>", desc = "Aerial (Symbols)" },
+      { "<leader>cs", "<cmd>AerialToggle<cr>", desc = "Symbols (Aerial)" },
+      { "{", "<cmd>AerialPrev<cr>", desc = "Prev Symbol" },
+      { "}", "<cmd>AerialNext<cr>", desc = "Next Symbol" },
+    },
+  },
 }
