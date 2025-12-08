@@ -9,11 +9,56 @@
 -- * disable/enabled LazyVim plugins
 -- * override the configuration of LazyVim plugins
 return {
+  -- add monokai pro
+  {
+    "loctvl842/monokai-pro.nvim",
+    config = function()
+      require("monokai-pro").setup({
+        transparent_background = false,
+        terminal_colors = true,
+        devicons = true,
+        styles = {
+          comment = { italic = true },
+          keyword = { italic = true },
+          type = { italic = true },
+          storageclass = { italic = true },
+          structure = { italic = true },
+          parameter = { italic = true },
+          annotation = { italic = true },
+          tag_attribute = { italic = true },
+        },
+        filter = "pro",
+        day_night = {
+          enable = false,
+          day_filter = "pro",
+          night_filter = "spectrum",
+        },
+        inc_search = "background",
+        background_clear = {
+          "toggleterm",
+          "telescope",
+          "renamer",
+          "notify",
+        },
+        plugins = {
+          bufferline = {
+            underline_selected = false,
+            underline_visible = false,
+          },
+          indent_blankline = {
+            context_highlight = "default",
+            context_start_underline = false,
+          },
+        },
+        override = function(c) end,
+      })
+    end,
+  },
   -- add tokynight
     {
       "folke/tokyonight.nvim",
       opts = {
-        transparent = false,
+        transparent = true,
         styles = {
           sidebars = "transparent",
           floats = "transparent",
@@ -24,14 +69,16 @@ return {
     {
         "ellisonleao/gruvbox.nvim",
           opts = {
-            transparent_mode = false,
+            transparent_mode = true,
         },
     },
+  -- add catppuccin
+    { "catppuccin/nvim", name = "catppuccin", priority = 1000 };
   -- Configure LazyVim to load gruvbox
     {
         "LazyVim/LazyVim",
         opts = {
-            colorscheme = "tokyonight",
+            colorscheme = "monokai-pro",
         },
     },
 
@@ -229,7 +276,7 @@ return {
                     -- location of cscope db file
                     db_file = "./cscope.out", -- DB or table of DBs
                                             -- NOTE:
-                                            --   when table of DBs is provided 
+                                            --   when table of DBs is provided
                                             --   first DB is "primary" and others are "secondary"
                                             --   primary DB is used for build and project_rooter
                     -- cscope executable
