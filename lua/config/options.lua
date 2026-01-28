@@ -11,5 +11,20 @@ vim.opt.clipboard = "unnamedplus"
 
 vim.g.snacks_animate = false
 
+vim.opt.wrap = true
+vim.opt.linebreak = true
+vim.opt.showbreak = "↪ "
+vim.opt.breakindent = true
+
+vim.opt.sidescroll = 5
+vim.opt.sidescrolloff = 8
+
+vim.opt.listchars = {
+  extends = "›",
+  precedes = "‹",
+  tab = "→ ",
+  trail = "·",
+}
+
 -- Enable true color support
 -- vim.opt.termguicolors = true
