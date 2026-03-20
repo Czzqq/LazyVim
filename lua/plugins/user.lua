@@ -143,14 +143,20 @@ return {
     "neovim/nvim-lspconfig",
     dependencies = {
       "jose-elias-alvarez/typescript.nvim",
-      init = function()
-        require("lazyvim.util").lsp.on_attach(function(_, buffer)
-          -- stylua: ignore
-          vim.keymap.set( "n", "<leader>co", "TypescriptOrganizeImports", { buffer = buffer, desc = "Organize Imports" })
-          vim.keymap.set("n", "<leader>cR", "TypescriptRenameFile", { desc = "Rename File", buffer = buffer })
-        end)
-      end,
     },
+    init = function()
+      -- 使用 LspAttach 事件来设置 keymap
+      vim.api.nvim_create_autocmd("LspAttach", {
+        callback = function(args)
+          local buffer = args.buf
+          local client = vim.lsp.get_client_by_id(args.data.client_id)
+          if client and client.name == "tsserver" then
+            vim.keymap.set("n", "<leader>co", "<cmd>TypescriptOrganizeImports<cr>", { buffer = buffer, desc = "Organize Imports" })
+            vim.keymap.set("n", "<leader>cR", "<cmd>TypescriptRenameFile<cr>", { desc = "Rename File", buffer = buffer })
+          end
+        end,
+      })
+    end,
     ---@class PluginLspOpts
     opts = {
       ---@type lspconfig.options
@@ -221,8 +227,8 @@ return {
 
   -- add any tools you want to have installed below
   {
-    "williamboman/mason.nvim",
-    "williamboman/mason-lspconfig.nvim",
+    "mason-org/mason.nvim",
+    "mason-org/mason-lspconfig.nvim",
     "neovim/nvim-lspconfig",
     opts = {
       ensure_installed = {
