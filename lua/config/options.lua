@@ -19,12 +19,15 @@ vim.opt.breakindent = true
 vim.opt.sidescroll = 5
 vim.opt.sidescrolloff = 8
 
+vim.opt.list = true
 vim.opt.listchars = {
-  extends = "›",
-  precedes = "‹",
-  tab = "→ ",
-  trail = "·",
+  tab = "→ ",      -- tab 显示为 → 加空格
+  trail = "·",      -- 尾部空格显示为 ·
+  extends = "»",    -- 行延伸显示为 »
+  precedes = "«",   -- 行前置显示为 «
+  nbsp = "+",       -- 非破坏性空格显示为 +
 }
+vim.opt.list = true
 
 -- Enable true color support
 -- vim.opt.termguicolors = true
